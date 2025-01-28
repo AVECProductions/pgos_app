@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block extra_styles %}
+<style>
+    html, body {
+        margin: 0;
+        padding: 0;
+        height: calc(100% - 40px);
+        font-family: Arial, sans-serif;
+        background-color: #000;
+        color: #ccc;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .container {
+        text-align: center;
+    }
+
+    .logout-icon {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 16px;
+        color: #ccc;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        cursor: pointer;
+    }
+
+    .logout-icon:hover {
+        color: #fff;
+    }
+
+    .header {
+        font-size: 28px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .time-label {
+        margin-bottom: 20px;
+        font-size: 16px;
+        color: #aaa;
+    }
+
+    .button-container {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 20px;
+    }
+
+    .home-button {
+        flex: 1;
+        max-width: 150px;
+        padding: 20px 15px;
+        text-align: center;
+        font-size: 16px;
+        color: #fff;
+        background-color: #444;
+        border: none;
+        cursor: pointer;
+        border-radius: 8px;
+        text-decoration: none;
+        white-space: nowrap;
+    }
+
+    .home-button:hover {
+        background-color: #333;
+    /* Messages styling */
+    .messages {
+        width: 100%;
+        max-width: 400px;
+        margin-bottom: 10px;
+    }
+    .alert {
+        padding: 10px;
+        background-color: #333;
+        color: #fff;
+        border-radius: 5px;
+        margin-bottom: 5px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- Messages -->
+{% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<div class="container">
+    {% if is_logged_in %}
+        <!-- Logout Icon -->
+        <a href="{% url 'member_logout' %}" class="logout-icon">
+            Logout &#8594;
+        </a>
+    {% endif %}
+
+    <!-- Header -->
+    <div class="header">Welcome to the Studio</div>
+
+    <!-- Time Label -->
+    <div class="time-label">
+        Current Time: {{ current_time }}
+    </div>
+
+    <!-- Buttons -->
+    <div class="button-container">
+        <a href="/monthly-calendar/" class="home-button">Schedule Session</a>
+        {% if is_logged_in %}
+            {% if is_admin %}
+                <a href="/admin-dashboard/" class="home-button">Admin Dashboard</a>
+            {% elif is_operator %}
+                <a href="/operator-dashboard/" class="home-button">Operator Dashboard</a>
+            {% elif is_member %}
+                <a href="/member-dashboard/" class="home-button">Member Dashboard</a>
+            {% endif %}
+        {% else %}
+            <a href="/accounts/login/" class="home-button">Member Login</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
